@@ -8,42 +8,45 @@
   :root {
     --bg: #f6f6f4; --surface: #ffffff; --ink: #1c1c1e; --muted: #6b6b70; --line: #e2e2de;
     --accent: #2f5bea; --accent-ink: #ffffff; --ok: #1f8a4c; --ok-bg: #e6f4ec;
-    --warn: #a15c00; --warn-bg: #fff3df; --chip: #efefeb; --code: #f0f0ec;
+    --warn: #a15c00; --warn-bg: #fff3df; --chip: #efefeb; --code: #f0f0ec; --bad: #c0392b;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #141416; --surface: #1d1d20; --ink: #f2f2f4; --muted: #9a9aa2; --line: #323237;
       --accent: #7c9bff; --accent-ink: #0d1020; --ok: #5fd08d; --ok-bg: #16281e;
-      --warn: #f0b45a; --warn-bg: #2b2213; --chip: #2a2a2e; --code: #28282c;
+      --warn: #f0b45a; --warn-bg: #2b2213; --chip: #2a2a2e; --code: #28282c; --bad: #ff7b6b;
     }
   }
   :root[data-theme="dark"] {
     --bg: #141416; --surface: #1d1d20; --ink: #f2f2f4; --muted: #9a9aa2; --line: #323237;
     --accent: #7c9bff; --accent-ink: #0d1020; --ok: #5fd08d; --ok-bg: #16281e;
-    --warn: #f0b45a; --warn-bg: #2b2213; --chip: #2a2a2e; --code: #28282c;
+    --warn: #f0b45a; --warn-bg: #2b2213; --chip: #2a2a2e; --code: #28282c; --bad: #ff7b6b;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0; background: var(--bg); color: var(--ink);
     font: 16px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
   }
-  .wrap { max-width: 860px; margin: 0 auto; padding: 24px 16px 96px; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 24px 16px 96px; }
   h1 { font-size: 1.7rem; margin: 0 0 4px; letter-spacing: -0.01em; }
   .sub { color: var(--muted); margin: 0 0 20px; }
   .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px; margin-bottom: 16px; }
   .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
   label.f { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; color: var(--muted); flex: 1 1 180px; min-width: 0; }
-  select, input[type=text], input[type=url], input[type=email] {
+  select, input[type=text], input[type=url], input[type=email], textarea {
     font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line);
     border-radius: 9px; padding: 9px 10px; width: 100%; min-width: 0;
   }
-  select:focus, input:focus, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  textarea { resize: vertical; min-height: 72px; }
+  select:focus, input:focus, textarea:focus, button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
   button {
     font: inherit; cursor: pointer; border-radius: 9px; border: 1px solid var(--line);
     background: var(--surface); color: var(--ink); padding: 8px 12px;
   }
   button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
-  button.danger { color: #c0392b; }
+  button.danger { color: var(--bad); }
+  button.small { padding: 4px 10px; font-size: .8rem; }
+  a { color: var(--accent); }
   .bars { display: grid; grid-template-columns: 1fr; gap: 14px; }
   @media (min-width: 640px) { .bars { grid-template-columns: 1fr 1fr; } }
   .bar-label { display: flex; justify-content: space-between; font-size: .9rem; margin-bottom: 6px; }
@@ -53,50 +56,63 @@
   .banner { border-radius: 12px; padding: 12px 14px; margin-top: 14px; font-weight: 600; }
   .banner.wait { background: var(--warn-bg); color: var(--warn); }
   .banner.go { background: var(--ok-bg); color: var(--ok); }
+  .detail-line { color: var(--muted); font-size: .85rem; margin-top: 8px; }
   .phase { margin-bottom: 18px; }
   .phase-h { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin: 22px 4px 8px; }
   .phase-h h2 { font-size: 1.1rem; margin: 0; }
-  .phase-h small { color: var(--muted); }
+  .phase-h small { color: var(--muted); white-space: nowrap; }
   .phase-note { color: var(--muted); font-size: .9rem; margin: 0 4px 8px; }
   .item { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 8px; }
-  .item.checked { background: var(--ok-bg); border-color: transparent; }
-  .item-top { display: flex; gap: 10px; align-items: flex-start; padding: 12px 12px; }
-  .item-top input[type=checkbox] { width: 22px; height: 22px; margin-top: 2px; flex: none; accent-color: var(--ok); }
-  .item-title { flex: 1; text-align: left; background: none; border: 0; padding: 0; font-weight: 600; font-size: 1rem; }
-  .item.checked .item-title { text-decoration: line-through; text-decoration-color: var(--muted); color: var(--muted); }
+  .item.done { background: var(--ok-bg); border-color: transparent; }
+  .item-head { display: flex; gap: 10px; align-items: flex-start; width: 100%; text-align: left; background: none; border: 0; padding: 12px; border-radius: 12px; }
+  .item-title { flex: 1; font-weight: 600; font-size: 1rem; min-width: 0; }
+  .item.done .item-title { color: var(--ok); }
+  .prog { color: var(--muted); font-size: .8rem; white-space: nowrap; padding-top: 2px; }
   .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
   .tag { font-size: .72rem; padding: 2px 8px; border-radius: 999px; background: var(--chip); color: var(--muted); font-weight: 600; }
+  .tag.where { background: transparent; border: 1px solid var(--line); }
   .tag.req { background: var(--warn-bg); color: var(--warn); }
-  .chev { color: var(--muted); flex: none; padding: 2px 6px; background: none; border: 0; }
-  .body { padding: 0 14px 14px 44px; display: none; }
+  .body { padding: 0 14px 14px 14px; display: none; }
   .item.open .body { display: block; }
-  .why { color: var(--muted); margin: 0 0 8px; }
-  .body ol, .body ul { margin: 0 0 10px; padding-left: 20px; }
-  .body li { margin-bottom: 4px; }
+  .why { color: var(--muted); margin: 0 0 10px; }
+  .step { display: flex; gap: 10px; padding: 8px 0; border-top: 1px solid var(--line); }
+  .item.done .step { border-color: rgba(0,0,0,.08); }
+  .step input[type=checkbox] { width: 20px; height: 20px; margin-top: 3px; flex: none; accent-color: var(--ok); }
+  .step-main { flex: 1; min-width: 0; }
+  .step.checked .step-text { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--muted); }
+  .step-text { cursor: pointer; }
+  .w { font-size: .7rem; font-weight: 700; padding: 1px 7px; border-radius: 6px; background: var(--chip); color: var(--muted); margin-right: 6px; vertical-align: 1px; }
+  .opt-tag { font-size: .7rem; color: var(--muted); margin-left: 6px; }
   code { background: var(--code); padding: 1px 6px; border-radius: 5px; font-size: .88em; }
+  .links { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; font-size: .88rem; }
+  .cmdbox { margin-top: 8px; background: var(--code); border-radius: 10px; padding: 8px 10px; display: flex; gap: 8px; align-items: flex-start; }
+  .cmdbox pre { margin: 0; flex: 1; min-width: 0; white-space: pre-wrap; word-break: break-word; font: .82rem/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .cmd-label { font-size: .72rem; color: var(--muted); margin-top: 8px; }
   .fields { display: grid; gap: 10px; margin-top: 10px; }
   .count { font-size: .75rem; color: var(--muted); text-align: right; }
-  .count.over { color: #c0392b; font-weight: 700; }
-  .hint { font-size: .78rem; color: #c0392b; min-height: 1em; }
+  .count.over { color: var(--bad); font-weight: 700; }
+  .hint { font-size: .78rem; color: var(--bad); min-height: 1em; }
+  .help { font-size: .78rem; color: var(--muted); }
   pre.sheet {
     background: var(--code); border-radius: 10px; padding: 12px; white-space: pre-wrap;
-    word-break: break-word; font: .85rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; margin: 10px 0;
+    word-break: break-word; font: .82rem/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; margin: 10px 0; max-height: 520px; overflow: auto;
   }
   .tools { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
   .foot { color: var(--muted); font-size: .85rem; margin-top: 24px; }
   .hidden-file { display: none; }
   @media print {
     body { background: #fff; color: #000; }
-    .noprint, .chev, .tools { display: none !important; }
+    .noprint, .tools { display: none !important; }
     .body { display: block !important; }
     .card, .item { break-inside: avoid; border-color: #bbb; }
+    pre.sheet { max-height: none; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>App Setup Checklist</h1>
-  <p class="sub">Do the basics once, before the build starts, so that when the app is finished you only package it and submit it for review.</p>
+  <p class="sub">Do every setup step once, before the build starts, and type the final details in as you go. At the end you get one project sheet that answers the studio's questions for you.</p>
 
   <section class="card noprint" aria-label="Project">
     <div class="row">
@@ -123,8 +139,9 @@
           <option value="iap">Subscription / in-app purchases</option>
         </select>
       </label>
+      <button id="expandBtn">Expand all</button>
     </div>
-    <p class="sub" style="margin:10px 0 0;font-size:.85rem">The two switches hide or show the items that apply. Your ticks and notes are saved in this browser on this computer. Use Export to keep a backup file.</p>
+    <p class="sub" style="margin:10px 0 0;font-size:.85rem">The two switches hide the steps that do not apply. Everything you tick or type is saved in this browser on this computer. Use Export (at the bottom) as a backup.</p>
   </section>
 
   <section class="card" aria-label="Progress">
@@ -139,16 +156,18 @@
       </div>
     </div>
     <div id="banner" class="banner wait"></div>
+    <div id="detailLine" class="detail-line"></div>
   </section>
 
   <div id="phases"></div>
 
-  <section class="card" aria-label="Project sheet">
+  <section class="card" aria-label="Project sheet" id="sheetCard">
     <h2 style="margin:0 0 4px;font-size:1.1rem">Project sheet</h2>
-    <p class="sub" style="margin:0">Everything you filled in above. Paste it as the first message when you start the studio's Product stage.</p>
+    <p class="sub" style="margin:0">Everything you typed above, in one file for the studio. Download it and save it in the project folder as <code>studio/PROJECT_SETUP.md</code>. Do not put passwords in it.</p>
     <pre class="sheet" id="sheet"></pre>
     <div class="tools noprint">
-      <button id="copyBtn" class="primary">Copy project sheet</button>
+      <button id="downloadBtn" class="primary">Download project sheet</button>
+      <button id="copyBtn">Copy project sheet</button>
       <button id="exportBtn">Export all projects (backup)</button>
       <button id="importBtn">Import backup</button>
       <button id="printBtn">Print / save as PDF</button>
@@ -158,429 +177,758 @@
     <p id="status" class="sub" style="margin:8px 0 0;font-size:.85rem" role="status"></p>
   </section>
 
-  <p class="foot">Apple changes screenshot sizes, age-rating questions and review rules from time to time. Where an item says to confirm something in App Store Connect, trust the live screen over this page.</p>
+  <p class="foot">Apple changes screens, wording, screenshot sizes and review rules from time to time. If a button or menu is named slightly differently on your screen, trust your screen over this page.</p>
 </div>
 
 <script>
 (function () {
   "use strict";
 
-  /* ---------- Content ---------- */
-  // plat: which platforms the item applies to (omit = all). money: which pricing modes show it (omit = all).
-  // req: required. Phases with gate "start" must be done before the build begins.
-  var PHASES = [
-    { id: "p0", gate: "start", title: "1. Decide the basics", note: "Cheap to change now, painful or impossible to change after the first upload." },
-    { id: "p1", gate: "start", title: "2. Apple Developer account and agreements", note: "Your account is already enrolled, so this is only a quick confirmation." },
-    { id: "p2", gate: "start", title: "3. Create the app in App Store Connect", note: "This reserves your app name and locks in the bundle ID." },
-    { id: "p3", gate: "start", title: "4. Local folder, studio framework and project shell", note: "The place where the build will happen." },
-    { id: "p4", gate: "start", title: "5. Legal pages and support contact", note: "App Store Connect will not let you submit without these URLs." },
-    { id: "p5", gate: "submit", title: "6. Store listing text and images (during the build)", note: "Needs the finished app, so it does not block the start." },
-    { id: "p6", gate: "submit", title: "7. Test before you submit", note: "Catch problems yourself before App Review does." },
-    { id: "p7", gate: "submit", title: "8. Submit and go live", note: "The final run, once the build is approved." }
-  ];
+  /* ================= CONTENT ================= */
 
-  var ITEMS = [
-    /* ---- Phase 1: decide ---- */
-    { id: "name", phase: "p0", req: true, title: "Pick the app name and subtitle",
-      why: "The name shows under the icon and on the App Store page. Both fields have a 30 character limit.",
-      steps: ["Search the App Store for the same or similar names.", "Keep the name short, easy to spell and easy to say.", "Put the descriptive words in the subtitle, not in the name."],
-      fields: [ { k: "appName", label: "App name (max 30)", max: 30 }, { k: "subtitle", label: "Subtitle (max 30)", max: 30 } ] },
-    { id: "namecheck", phase: "p0", req: true, title: "Check the name is safe to use",
-      why: "A name that clashes with a trademark can get the app removed later.",
-      steps: ["Search your country's trademark register and the EU or US ones.", "Check the domain name and the social media handle are free (optional but worth doing now).", "Note any conflict and decide before going further."] },
-    { id: "bundle", phase: "p0", req: true, title: "Choose the bundle ID and SKU",
-      why: "The bundle ID identifies your app everywhere and cannot be changed after the first upload. The SKU is a private label for your own records and also cannot be changed.",
-      steps: ["Bundle ID format: reverse domain, for example <code>com.yourname.appname</code>. Letters, numbers, hyphens and dots only.", "SKU: any unique text, for example <code>appname-001</code>."],
-      fields: [ { k: "bundleId", label: "Bundle ID", type: "bundle" }, { k: "sku", label: "SKU" } ] },
-    { id: "feasMac", phase: "p0", req: true, plat: ["mac"], title: "Prove the core feature works in the Mac App Store sandbox",
-      why: "The Mac App Store requires App Sandbox. Features that need system-wide access (accessibility control, input monitoring, other apps' windows) are the most common reason an idea cannot ship there.",
-      steps: ["Build a tiny test of the riskiest feature with App Sandbox switched on.", "Read the relevant App Review Guidelines section on that capability.", "If it cannot work, decide now: change the feature, or distribute outside the Mac App Store instead."] },
-    { id: "feasIos", phase: "p0", req: true, plat: ["ios"], title: "Check the core feature is allowed on iOS",
-      why: "Better to find a blocker now than after the build.",
-      steps: ["Read the App Review Guidelines for every permission and capability the app uses.", "Make sure the app does enough to avoid the minimum-functionality rejection."] },
-    { id: "audience", phase: "p0", req: true, title: "Set category, audience and minimum OS",
-      why: "These choices shape the listing and what you are allowed to use in code.",
-      steps: ["Pick a primary category and an optional second one.", "Decide the oldest OS version you will support.", "Think about who the audience is, because it drives the age rating questions."],
-      fields: [ { k: "category", label: "Primary category" }, { k: "minOs", label: "Minimum OS version" } ] },
-    { id: "pricing", phase: "p0", req: true, title: "Decide the pricing model for this app",
-      why: "Each app is different. Free, paid, or subscription changes the legal pages and the in-app purchase setup below.",
-      steps: ["Pick the model, then set the 'How it earns money' switch at the top to match.", "If you are not sure, leave it on 'Not decided yet'. Money-only items then become optional."] },
+  var TOOLS = { asc: "App Store Connect", dev: "Developer site", xc: "Xcode", term: "Terminal", fin: "Finder", web: "Website", cc: "Claude Code", note: "Notes", sim: "Simulator" };
 
-    /* ---- Phase 2: account ---- */
-    { id: "access", phase: "p1", req: true, title: "Confirm your role and Team ID",
-      why: "Only certain roles can create apps and accept agreements.",
-      steps: ["In App Store Connect, check you are Account Holder, Admin or App Manager.", "Find your Team ID (developer.apple.com, Membership details) and note it."],
-      fields: [ { k: "teamId", label: "Team ID" } ] },
-    { id: "agree", phase: "p1", req: true, money: ["paid", "iap", "undecided"], title: "Confirm the Paid Apps Agreement is active",
-      why: "Needed for paid apps and in-app purchases. Banking and tax are set up already; this is just a quick look.",
-      steps: ["App Store Connect, Business (or Agreements, Tax, and Banking).", "The Paid Apps Agreement should show Active with no warnings."] },
-    { id: "appid", phase: "p1", req: true, title: "Register the App ID with your bundle ID",
-      why: "Links the bundle ID to your team and switches on the capabilities the app uses.",
-      steps: ["Developer portal, Identifiers, add an explicit App ID using the bundle ID above.", "Xcode's automatic signing can also register it for you when you first build."] },
-    { id: "caps", phase: "p1", req: false, title: "Enable special capabilities (only the ones you need)",
-      why: "iCloud, push notifications, App Groups, Sign in with Apple and similar must be enabled on the App ID and in Xcode, and they must match.",
-      steps: ["List the capabilities the app will need.", "Enable each on the App ID.", "Add the same ones later in Xcode, under Signing & Capabilities."] },
-    { id: "certMac", phase: "p1", req: true, plat: ["mac"], title: "Check distribution signing for the Mac App Store",
-      why: "Mac App Store builds are signed with Apple Distribution and Mac Installer Distribution certificates.",
-      steps: ["Xcode, Settings, Accounts, select your team, Manage Certificates.", "Let Xcode's automatic signing create them if they are missing.", "A Developer ID certificate is only needed if you also distribute outside the store."] },
-
-    /* ---- Phase 3: ASC record ---- */
-    { id: "create", phase: "p2", req: true, title: "Create the app record",
-      why: "This is the moment the name is actually reserved. If your first-choice name is taken, you find out here.",
-      steps: ["App Store Connect, Apps, plus button, New App.", "Choose the platform(s), name, primary language, bundle ID and SKU from your answers above.", "Write down the numeric Apple ID that appears on the App Information page."],
-      fields: [ { k: "appleId", label: "Apple ID of the app (numbers)" } ] },
-    { id: "ratings", phase: "p2", req: true, title: "Category, content rights and age rating",
-      why: "Required before submission, and easier to do while the details are fresh.",
-      steps: ["Set the primary category (and optional second).", "Answer the content rights question.", "Complete the age rating questionnaire honestly. Apple has updated its questions in recent years, so answer what the screen shows today."] },
-    { id: "privacy", phase: "p2", req: true, title: "App Privacy answers and privacy policy URL",
-      why: "Every app needs a public privacy policy URL, even apps that collect nothing.",
-      steps: ["App Privacy page: list every kind of data the app or its tools collect (or say none).", "Paste the privacy policy URL (see the Legal section below)."],
-      fields: [ { k: "privacyUrl", label: "Privacy policy URL", type: "url" } ] },
-    { id: "support", phase: "p2", req: true, title: "Support URL and contact details",
-      why: "Shown on the store page and used by App Review to reach you.",
-      steps: ["Add a support URL (a simple page with an email address is enough).", "Optional: marketing URL."],
-      fields: [ { k: "supportUrl", label: "Support URL", type: "url" }, { k: "supportEmail", label: "Support email", type: "email" } ] },
-    { id: "price", phase: "p2", req: true, title: "Price and availability",
-      why: "Even free apps need this step.",
-      steps: ["Set the price (Free or a price point).", "Choose the countries or regions.", "Decide whether it appears right after approval or on a date you choose."] },
-    { id: "export", phase: "p2", req: true, title: "Export compliance (encryption) answer",
-      why: "Apple asks about encryption on every build. Answering once in the project file saves the question each upload.",
-      steps: ["Most apps only use standard system encryption (for example HTTPS).", "In that case add <code>ITSAppUsesNonExemptEncryption</code> = <code>NO</code> to the Info.plist.", "If you add custom encryption, read Apple's export rules first."] },
-    { id: "review", phase: "p2", req: true, title: "App Review contact and notes",
-      why: "A clear note can save days of back-and-forth.",
-      steps: ["Add your name, phone number and email for the reviewer.", "Write notes explaining anything unusual, for example permissions the app asks for and why.", "If the app needs a login, create a demo account and add it."] },
-    { id: "iapProducts", phase: "p2", req: true, money: ["iap", "undecided"], title: "Create the in-app purchases or subscriptions",
-      why: "The first purchase products must be submitted together with the first app version.",
-      steps: ["App Store Connect, your app, Monetization.", "Create each product with ID, price, name, description and a review screenshot.", "For subscriptions: create a subscription group and set the levels."] },
-    { id: "subLegal", phase: "p2", req: true, money: ["iap", "undecided"], title: "Subscription terms shown clearly",
-      why: "Apple rejects subscription apps that hide the price, renewal period or cancellation info.",
-      steps: ["Show price, length, auto-renewal and a way to restore purchases inside the app.", "Link to the privacy policy and terms of use in the app and in the description."] },
-    { id: "tfGroup", phase: "p2", req: false, title: "Create a TestFlight internal testing group",
-      why: "TestFlight is the safest way to test the real build before review (it works for both Mac and iOS).",
-      steps: ["App Store Connect, TestFlight, add an internal group and add yourself."] },
-
-    /* ---- Phase 4: local ---- */
-    { id: "folder", phase: "p3", req: true, title: "Create the project folder",
-      why: "One folder for everything, easy to find and back up.",
-      steps: ["Create a new folder, for example <code>~/Apps/yourappname</code>.", "Avoid spaces in the folder name."],
-      fields: [ { k: "folder", label: "Folder path" } ] },
-    { id: "studio", phase: "p3", req: true, title: "Copy in the studio framework",
-      why: "So the specialist team, the approval gates and the Apple skills rules are there from day one.",
-      steps: ["From a finished project, copy <code>CLAUDE.md</code>, the <code>.claude</code> folder and the <code>studio</code> folder.", "Open the new folder in Claude Code and ask where the project stands."] },
-    { id: "git", phase: "p3", req: true, title: "Put the folder under version control",
-      why: "Gives you history and an undo button.",
-      steps: ["Run <code>git init</code> in the folder.", "Add a standard Xcode <code>.gitignore</code>.", "Create a private repository online and connect it (optional but recommended)."],
-      fields: [ { k: "repo", label: "Repository URL (optional)", type: "url" } ] },
-    { id: "xcode", phase: "p3", req: false, title: "Create the empty Xcode project shell",
-      why: "Doing it now proves signing works. If you prefer, the Engineering stage can do it instead; then just untick this.",
-      steps: ["Create the project with the bundle ID, your team, the display name and the minimum OS.", "Set version <code>1.0</code> and build <code>1</code>.", "Check it builds and runs as an empty app."],
-      fields: [ { k: "version", label: "First version number" } ] },
-    { id: "sandbox", phase: "p3", req: true, plat: ["mac"], title: "Switch on App Sandbox and Hardened Runtime",
-      why: "Both are required for a Mac App Store build.",
-      steps: ["Xcode, Signing & Capabilities: add App Sandbox and tick only the permissions you need.", "Enable Hardened Runtime.", "Set the app category in the Info.plist (<code>LSApplicationCategoryType</code>)."] },
-    { id: "privMan", phase: "p3", req: true, title: "Add a privacy manifest",
-      why: "Apple expects a <code>PrivacyInfo.xcprivacy</code> file declaring any 'required reason' system APIs the app or its libraries use.",
-      steps: ["Add the file to the project.", "Fill it in during the build when you know which APIs are used."] },
-    { id: "icon", phase: "p3", req: false, title: "Placeholder app icon",
-      why: "Builds without an icon are rejected. A placeholder is fine for now.",
-      steps: ["Prepare a 1024 x 1024 PNG.", "iOS icons must not have transparency. Mac icons need the full set of sizes in the asset catalog."] },
-
-    /* ---- Phase 5: legal ---- */
-    { id: "privacyLive", phase: "p4", req: true, title: "Publish the privacy policy page",
-      why: "The URL must work for anyone, with no login.",
-      steps: ["Write a plain-language policy: what you collect (even if nothing), why, and how to contact you.", "Host it on any public page, for example a simple site, a public document or a repository page.", "Open the URL in a private window to confirm it works, then put it in the field above."] },
-    { id: "supportLive", phase: "p4", req: true, title: "Publish a support page or email",
-      why: "Users and reviewers need a way to reach you.",
-      steps: ["A single page with a support email address is enough.", "Use an email address you will actually read."] },
-    { id: "terms", phase: "p4", req: false, title: "Terms of use / EULA (if you want your own)",
-      why: "Apple provides a standard EULA. You only need your own if you want different terms. Subscription apps should always link their terms.",
-      steps: ["Use Apple's standard EULA, or host your own and add its link to the listing."] },
-    { id: "landing", phase: "p4", req: false, title: "Landing page (optional)",
-      why: "Useful for press and for people who find you outside the store.",
-      steps: ["One page: name, one-line promise, screenshots and a store link."] },
-
-    /* ---- Phase 6: listing ---- */
-    { id: "copy", phase: "p5", req: true, title: "Write the store text",
-      why: "This is the sales page. Keywords are not shown to users but help search.",
-      steps: ["Description: lead with what the app does for the person.", "Promotional text (max 170) can be changed any time without a new review.", "Keywords (max 100, comma separated, no spaces after commas, do not repeat the name).", "'What's New' text for this version."],
-      fields: [ { k: "promo", label: "Promotional text (max 170)", max: 170 }, { k: "keywords", label: "Keywords (max 100)", max: 100 }, { k: "copyright", label: "Copyright line, for example 2026 Your Name" } ] },
-    { id: "shotsMac", phase: "p5", req: true, plat: ["mac"], title: "Mac screenshots",
-      why: "At least one is required, up to ten.",
-      steps: ["Mac screenshots use a 16:10 shape, for example 1280 x 800, 1440 x 900, 2560 x 1600 or 2880 x 1800.", "Confirm the accepted sizes on the upload screen in App Store Connect."] },
-    { id: "shotsIos", phase: "p5", req: true, plat: ["ios"], title: "iPhone and iPad screenshots",
-      why: "App Store Connect accepts the largest size and scales it for the smaller devices where allowed.",
-      steps: ["Prepare the sizes for the largest iPhone class, and for iPad if the app supports iPad.", "Confirm the accepted sizes on the upload screen in App Store Connect."] },
-    { id: "video", phase: "p5", req: false, title: "App preview video (optional)",
-      why: "Short clips can lift conversion but are not required.",
-      steps: ["Up to 30 seconds, recorded from the real app."] },
-    { id: "local", phase: "p5", req: false, title: "Extra languages (optional)",
-      why: "More languages means more people can find and trust the page.",
-      steps: ["Translate name, subtitle, description, keywords and screenshots for each language you add."] },
-
-    /* ---- Phase 7: test ---- */
-    { id: "tfBuild", phase: "p6", req: true, title: "Upload a build to TestFlight and install it",
-      why: "Tests the real signed build, not just the one on your development machine.",
-      steps: ["In Xcode: Product, Archive, then Distribute App, App Store Connect.", "Wait for processing, then install from TestFlight."] },
-    { id: "clean", phase: "p6", req: true, title: "Test on a clean setup",
-      why: "Finds permission and first-run problems that never show up on your own machine.",
-      steps: ["Use another Mac or device, or a fresh user account.", "Go through first launch, every permission prompt and quitting and relaunching."] },
-    { id: "iapTest", phase: "p6", req: true, money: ["iap"], title: "Test purchases and restore in the sandbox",
-      why: "A broken purchase flow is an instant rejection.",
-      steps: ["Create a sandbox tester in App Store Connect.", "Buy, cancel, renew and restore, and check the app unlocks and locks correctly."] },
-    { id: "review2", phase: "p6", req: true, title: "Run the pre-submission review",
-      why: "A last look at privacy, permissions and review-guideline risks.",
-      steps: ["Ask Claude Code to run the release review checklist (the security stage stays in charge of sign-off).", "Remove debug code, test data and leftover logging."] },
-
-    /* ---- Phase 8: submit ---- */
-    { id: "upload", phase: "p7", req: true, title: "Upload the final build",
-      why: "The build you submit must be the one you tested.",
-      steps: ["Raise the build number if you have uploaded before.", "Archive, then Distribute App, App Store Connect, Upload."] },
-    { id: "attach", phase: "p7", req: true, title: "Attach the build and check every section",
-      why: "Missing items show as warnings and block the Submit button.",
-      steps: ["Pick the processed build on the version page.", "Check listing, screenshots, privacy, pricing, review info and (if used) in-app purchases."] },
-    { id: "release", phase: "p7", req: true, title: "Choose how the release happens",
-      why: "You control when people can download it.",
-      steps: ["Manually release after approval (you click when ready).", "Or automatically after approval, or on a set date.", "iOS only: optional phased release over seven days."] },
-    { id: "submit", phase: "p7", req: true, title: "Submit for review",
-      why: "Reviews often take about a day or two, but it varies.",
-      steps: ["Click Add for Review, then Submit to App Review.", "If it is rejected, read the message, fix the exact point, reply in Resolution Center and resubmit."] },
-    { id: "live", phase: "p7", req: true, title: "Go live and check",
-      why: "Confirm the public page is right.",
-      steps: ["After approval, release (if manual).", "Search the store for the app, open the page and check text, images and price.", "Download it once from the store and run it."] }
-  ];
-
-  var FIELD_LABELS = {
-    appName: "App name", subtitle: "Subtitle", bundleId: "Bundle ID", sku: "SKU", category: "Category", minOs: "Minimum OS",
-    teamId: "Team ID", appleId: "Apple ID (app)", privacyUrl: "Privacy policy URL", supportUrl: "Support URL",
-    supportEmail: "Support email", folder: "Folder", repo: "Repository", version: "First version",
-    promo: "Promotional text", keywords: "Keywords", copyright: "Copyright"
+  var L = {
+    asc: ["App Store Connect", "https://appstoreconnect.apple.com"],
+    acct: ["Apple Developer account", "https://developer.apple.com/account"],
+    ids: ["Identifiers list", "https://developer.apple.com/account/resources/identifiers/list"],
+    guide: ["App Review Guidelines", "https://developer.apple.com/app-store/review/guidelines/"],
+    store: ["Search the App Store", "https://apps.apple.com"],
+    uspto: ["US trademark search", "https://www.uspto.gov/trademarks"],
+    euipo: ["EU trademark search", "https://euipo.europa.eu/eSearch/"],
+    sandbox: ["About App Sandbox", "https://developer.apple.com/documentation/security/app_sandbox"],
+    ghp: ["GitHub Pages (free hosting)", "https://pages.github.com"],
+    help: ["App Store Connect Help", "https://developer.apple.com/help/app-store-connect/"]
   };
-  var SHEET_ORDER = ["appName", "subtitle", "bundleId", "sku", "category", "minOs", "teamId", "appleId", "privacyUrl", "supportUrl", "supportEmail", "folder", "repo", "version", "keywords", "promo", "copyright"];
+
+  // Phases. gate "start" = must be done before the build starts. gate "submit" = needed before submitting.
+  var PHASES = [
+    { id: "p0", gate: "start", title: "1. Decide on paper", note: "Names and IDs are cheap to change now and impossible to change after the first upload." },
+    { id: "p1", gate: "start", title: "2. Apple Developer account", note: "Your account is already enrolled, so this only confirms the details and creates the App ID." },
+    { id: "p2", gate: "start", title: "3. Create the app in App Store Connect", note: "This reserves your app name and locks in the bundle ID." },
+    { id: "p3", gate: "start", title: "4. Project folder, studio and Xcode", note: "The place on your Mac where the build will happen." },
+    { id: "p4", gate: "start", title: "5. Privacy policy and support pages", note: "App Store Connect will not let you submit without these web addresses." },
+    { id: "p5", gate: "start", title: "6. Hand over to the studio", note: "Save the project sheet in the folder so nothing has to be asked twice." },
+    { id: "p6", gate: "submit", title: "7. Store listing text and images", note: "Needs the working app, so it does not block the start." },
+    { id: "p7", gate: "submit", title: "8. Test before you submit", note: "Find problems yourself before App Review does." },
+    { id: "p8", gate: "submit", title: "9. Submit and go live", note: "The final run, once the build is approved." }
+  ];
+
+  // Fields: the details that end up in the project sheet. opt = not required.
+  var FIELDS = {
+    appName: { label: "App name", max: 30, sec: "Identity", ph: "As it will show on the App Store" },
+    appNameBackup: { label: "Backup app name", max: 30, sec: "Identity", opt: true },
+    subtitle: { label: "Subtitle", max: 30, sec: "Identity", ph: "Short line under the name" },
+    appPitch: { label: "The idea in one or two sentences", type: "area", sec: "Identity", opt: true, help: "Optional. The Product stage will refine this." },
+    category: { label: "Primary category", sec: "Identity", ph: "For example Utilities" },
+    ageRating: { label: "Age rating result", type: "select", opts: ["4+", "9+", "13+", "16+", "18+"], sec: "Identity" },
+
+    bundleId: { label: "Bundle ID", type: "bundle", sec: "Identifiers", ph: "com.yourname.appname" },
+    sku: { label: "SKU", sec: "Identifiers", ph: "appname-001" },
+    appleId: { label: "Apple ID of the app (numbers)", sec: "Identifiers", help: "From App Information in App Store Connect." },
+    teamId: { label: "Team ID (10 characters)", sec: "Identifiers" },
+    sellerName: { label: "Seller name shown on the store", sec: "Identifiers" },
+    appGroupId: { label: "App Group ID", sec: "Identifiers", opt: true, ph: "group.com.yourname.appname" },
+
+    distribution: { label: "How the Mac app is distributed", type: "select", opts: ["Mac App Store only", "Mac App Store and direct download (Developer ID)"], sec: "Platform and technical" },
+    devices: { label: "Supported devices", type: "select", opts: ["iPhone only", "iPhone and iPad", "iPad only"], sec: "Platform and technical" },
+    minOs: { label: "Minimum system version", sec: "Platform and technical", ph: "For example macOS 14 or iOS 17" },
+    permissions: { label: "Permissions and system access the app needs", type: "area", sec: "Platform and technical", help: "One per line, with a few words on why." },
+    capabilities: { label: "Apple capabilities to enable on the App ID", type: "area", sec: "Platform and technical", help: "For example iCloud, Push Notifications, App Groups. Write 'none' if none." },
+    version: { label: "First version number", sec: "Platform and technical", ph: "1.0" },
+
+    price: { label: "Price", sec: "Money", ph: "Free, or an amount" },
+    iapProductIds: { label: "In-app purchases / subscriptions", type: "area", sec: "Money", help: "One per line: type, what it unlocks, Product ID." },
+    subGroup: { label: "Subscription group name", sec: "Money", opt: true },
+
+    privacyUrl: { label: "Privacy policy URL", type: "url", sec: "Web addresses and contacts" },
+    supportUrl: { label: "Support URL", type: "url", sec: "Web addresses and contacts" },
+    supportEmail: { label: "Support email", type: "email", sec: "Web addresses and contacts" },
+    termsUrl: { label: "Terms of use URL", type: "url", sec: "Web addresses and contacts", opt: true },
+    marketingUrl: { label: "Marketing / landing page URL", type: "url", sec: "Web addresses and contacts", opt: true },
+    dataCollected: { label: "Data the app collects (summary)", type: "area", sec: "Web addresses and contacts", help: "Write 'nothing' if it collects nothing." },
+
+    reviewerName: { label: "App Review contact name", sec: "App Review" },
+    reviewerPhone: { label: "App Review contact phone", sec: "App Review", ph: "Include country code" },
+    reviewerEmail: { label: "App Review contact email", type: "email", sec: "App Review" },
+    loginRequired: { label: "Does the app need a login?", type: "select", opts: ["No", "Yes"], sec: "App Review" },
+    demoNote: { label: "Where the demo login is kept", sec: "App Review", opt: true, help: "Never type the password here." },
+    reviewNotes: { label: "Notes for the reviewer", type: "area", sec: "App Review", opt: true },
+
+    folder: { label: "Project folder", sec: "On this Mac", ph: "~/Apps/app-name" },
+    repo: { label: "Repository URL", type: "url", sec: "On this Mac", opt: true },
+
+    description: { label: "App description", type: "area", max: 4000, sec: "Store listing" },
+    keywords: { label: "Keywords", max: 100, sec: "Store listing", ph: "word,another word,third" },
+    promo: { label: "Promotional text", type: "area", max: 170, sec: "Store listing" },
+    whatsNew: { label: "What's New text", type: "area", sec: "Store listing", ph: "First release." },
+    copyright: { label: "Copyright line", sec: "Store listing", ph: "2026 Your Name" },
+    release: { label: "How the release happens", type: "select", opts: ["Manually after approval", "Automatically after approval", "On a specific date"], sec: "Store listing" }
+  };
+  var SECTIONS = ["Identity", "Identifiers", "Platform and technical", "Money", "Web addresses and contacts", "App Review", "On this Mac", "Store listing"];
+
+  // Step helper keys: t text, w where, f fields, cmd/cl command block and its label, l links, plat, money, opt
+  var ITEMS = [
+
+  /* ---------- 1. Decide on paper ---------- */
+  { id: "name", ph: "p0", title: "Choose the app name and subtitle", where: ["note", "web"],
+    why: "The name is shown under the icon and on the store page. It must be unique across the whole App Store, and you only know for sure when you reserve it in section 3.",
+    s: [
+      { t: "Write down two or three names you like, best first. Each must be 30 characters or fewer." },
+      { t: "Search each name in the App Store (on a phone or on the web). Note any app with the same or a very similar name.", w: "web", l: ["store"] },
+      { t: "Search the trademark register for your country, and the US and EU ones, for each name.", w: "web", l: ["uspto", "euipo"] },
+      { t: "Check a matching domain name and social media handle are free.", opt: true, w: "web" },
+      { t: "Pick your first choice and type it here. Add a backup name in case the first is already taken.", f: ["appName", "appNameBackup"] },
+      { t: "Write a subtitle of 30 characters or fewer. This is the short line under the name that says what the app does.", f: ["subtitle"] }
+    ] },
+  { id: "ids", ph: "p0", title: "Choose the bundle ID and SKU", where: ["note"],
+    why: "The bundle ID identifies the app everywhere and can never be changed after the first upload. The SKU is a private label only you see, and it can never be changed either.",
+    s: [
+      { t: "Decide your bundle ID prefix. Use your own reversed web address in lowercase, for example `com.yourname`. Use the same prefix for every app you make." },
+      { t: "Add the app part, for example `com.yourname.appname`. Use only letters, numbers, hyphens and dots.", f: ["bundleId"] },
+      { t: "Choose a SKU, for example `appname-001`. Any unique text works.", f: ["sku"] }
+    ] },
+  { id: "featMac", ph: "p0", plat: ["mac"], title: "Check the core feature is allowed on the Mac App Store", where: ["note", "xc", "web"],
+    why: "The Mac App Store requires App Sandbox, which limits what an app can do. Features that need wide system access (Accessibility, Input Monitoring, controlling other apps, Screen Recording) are the most common reason a Mac idea cannot ship there.",
+    s: [
+      { t: "List every system permission or special access the app needs, with a few words on why.", f: ["permissions"] },
+      { t: "For each item, look up whether it is allowed in a sandboxed app.", w: "web", l: ["sandbox"] },
+      { t: "Read the Mac App Store section of the review guidelines (section 2.4.5).", w: "web", l: ["guide"] },
+      { t: "Wise but optional: in Xcode, build a tiny test of the riskiest feature with App Sandbox switched on, and see if it works.", w: "xc", opt: true },
+      { t: "Decide how you will distribute the app.", f: ["distribution"] }
+    ] },
+  { id: "featIos", ph: "p0", plat: ["ios"], title: "Check the core feature is allowed on iOS", where: ["note", "web"],
+    why: "Better to find a blocker now than after the build.",
+    s: [
+      { t: "List every permission the app needs (camera, location, notifications and so on), with a few words on why.", f: ["permissions"] },
+      { t: "Read the guidelines on minimum functionality (4.2) and app completeness (2.1).", w: "web", l: ["guide"] },
+      { t: "Decide which devices the app supports.", f: ["devices"] }
+    ] },
+  { id: "aud", ph: "p0", title: "Category, audience and minimum system version", where: ["note", "web"],
+    why: "These choices shape the store page and what you are allowed to use in code.",
+    s: [
+      { t: "Browse the App Store categories and look at where similar apps sit. Pick a primary category.", w: "web", f: ["category"] },
+      { t: "Decide the oldest system version you will support (for example macOS 14 or iOS 17). Older means more users but more work.", f: ["minOs"] },
+      { t: "Think about what is in the app: violence, gambling, chat, user-generated content, web browsing. You will answer Apple's age rating questions later, and knowing now avoids surprises." }
+    ] },
+  { id: "money", ph: "p0", title: "Decide how the app earns money", where: ["note"],
+    why: "Free, paid and subscription apps need different setup. You decide this per app.",
+    s: [
+      { t: "Decide: free, paid upfront, or subscription / in-app purchases. Then set the switch at the top of this page to match." },
+      { t: "Write the price. Type Free, or the amount. (App Store Connect only offers fixed price points, so you pick the nearest one later.)", f: ["price"] },
+      { t: "List each purchase or subscription: its type, what it unlocks, and a Product ID such as `com.yourname.appname.pro`. Product IDs can never be changed or reused.", f: ["iapProductIds"], money: ["iap", "undecided"] }
+    ] },
+  { id: "idea", ph: "p0", opt: true, title: "Write the idea in a sentence or two (optional)", where: ["note"],
+    why: "Context for the studio. The Product stage refines it, so keep it rough.",
+    s: [ { t: "Describe what the app does and who it is for.", f: ["appPitch"] } ] },
+
+  /* ---------- 2. Developer account ---------- */
+  { id: "acct", ph: "p1", title: "Confirm your account details", where: ["dev", "asc"],
+    why: "You are already enrolled. This collects the two details the build needs.",
+    s: [
+      { t: "Open the Apple Developer site and sign in. Click Account, then Membership details.", w: "dev", l: ["acct"] },
+      { t: "Copy your Team ID (10 characters) and paste it here.", w: "dev", f: ["teamId"] },
+      { t: "Note the seller name shown on the store. For an individual account it is your legal name. Paste it here.", w: "dev", f: ["sellerName"] },
+      { t: "Open App Store Connect, then Users and Access. Check your role is Account Holder, Admin or App Manager.", w: "asc", l: ["asc"] }
+    ] },
+  { id: "agree", ph: "p1", title: "Check the agreements", where: ["asc"],
+    why: "Agreements that are not active block apps and purchases.",
+    s: [
+      { t: "In App Store Connect open Business (older name: Agreements, Tax, and Banking).", w: "asc" },
+      { t: "Check the Free Apps agreement shows Active.", w: "asc" },
+      { t: "Check the Paid Apps agreement shows Active, with banking and tax details complete.", w: "asc", money: ["paid", "iap", "undecided"] }
+    ] },
+  { id: "appid", ph: "p1", title: "Register the App ID", where: ["dev"],
+    why: "Links your bundle ID to your team and switches on any special capabilities. Xcode can do this for you the first time you build with automatic signing, but doing it here proves it works.",
+    s: [
+      { t: "On the Developer site open Certificates, Identifiers & Profiles, then Identifiers.", w: "dev", l: ["ids"] },
+      { t: "Click the plus button. Choose App IDs, click Continue, choose App, click Continue.", w: "dev" },
+      { t: "Description: type the app name. Bundle ID: choose Explicit and paste your bundle ID from section 1.", w: "dev" },
+      { t: "Under Capabilities tick only what the app needs (for example iCloud, Push Notifications, App Groups, Sign in with Apple). List them here.", w: "dev", f: ["capabilities"] },
+      { t: "Click Continue, then Register.", w: "dev" }
+    ] },
+  { id: "group", ph: "p1", opt: true, title: "Create an App Group (only for widgets or extensions)", where: ["dev"],
+    why: "Needed only if parts of the app need to share data.",
+    s: [
+      { t: "In Identifiers click the plus button, choose App Groups, Continue.", w: "dev" },
+      { t: "Description: the app name. Identifier: `group.` followed by your bundle ID. Paste it here.", w: "dev", f: ["appGroupId"] },
+      { t: "Open your App ID, tick App Groups, click Configure, and pick the group.", w: "dev" }
+    ] },
+  { id: "certMac", ph: "p1", plat: ["mac"], title: "Create the Mac distribution certificates", where: ["xc"],
+    why: "Mac App Store builds are signed with two certificates. Xcode can also create them automatically at upload time, so if something is missing you can carry on and check again at the archive step.",
+    s: [
+      { t: "Open Xcode. Choose the Xcode menu, Settings, then Accounts. Click the plus button and sign in with your Apple ID if it is not listed.", w: "xc" },
+      { t: "Select your team and click Manage Certificates.", w: "xc" },
+      { t: "Click the plus button and choose Apple Distribution. Click the plus again and choose Mac Installer Distribution.", w: "xc" }
+    ] },
+  { id: "certIos", ph: "p1", plat: ["ios"], title: "Create the iOS distribution certificate", where: ["xc"],
+    why: "Xcode can also create this automatically at upload time.",
+    s: [
+      { t: "Open Xcode. Choose the Xcode menu, Settings, then Accounts. Sign in if needed.", w: "xc" },
+      { t: "Select your team, click Manage Certificates, click the plus button and choose Apple Distribution.", w: "xc" }
+    ] },
+
+  /* ---------- 3. App Store Connect ---------- */
+  { id: "create", ph: "p2", title: "Create the app (this reserves the name)", where: ["asc"],
+    why: "Until this step the name is only an idea. If your first choice is taken, you find out here. Apple may release a reserved name if the app sits unsubmitted for a long time, so read any notice App Store Connect shows.",
+    s: [
+      { t: "Open App Store Connect and click Apps.", w: "asc", l: ["asc"] },
+      { t: "Click the plus button, then New App.", w: "asc" },
+      { t: "Platforms: tick macOS and/or iOS to match this project.", w: "asc" },
+      { t: "Name: type your app name. If it says the name is taken, use the backup and change the name field in section 1 to match.", w: "asc" },
+      { t: "Primary language: choose your main language.", w: "asc" },
+      { t: "Bundle ID: pick the one you registered. If it is missing, redo the Register the App ID step in section 2.", w: "asc" },
+      { t: "SKU: paste the SKU from section 1. User Access: leave Full Access.", w: "asc" },
+      { t: "Click Create.", w: "asc" },
+      { t: "Open the new app, then App Information. Copy the Apple ID (a number) from General Information and paste it here.", w: "asc", f: ["appleId"] }
+    ] },
+  { id: "info", ph: "p2", title: "Fill in App Information", where: ["asc"],
+    why: "Required before submission, and easier while the details are fresh.",
+    s: [
+      { t: "In the app, open App Information in the left menu.", w: "asc" },
+      { t: "Set the Subtitle (copy it from section 1).", w: "asc" },
+      { t: "Set the Category. Choose the primary one (and optionally a second).", w: "asc" },
+      { t: "Content Rights: click Set Up, answer whether the app contains, shows or accesses third-party content, then Save.", w: "asc" },
+      { t: "Age Rating: click Edit, answer every question honestly, then Save. Type the rating you got here.", w: "asc", f: ["ageRating"] },
+      { t: "License Agreement: leave the standard Apple agreement unless you wrote your own.", w: "asc" }
+    ] },
+  { id: "priv", ph: "p2", title: "Answer the App Privacy questions", where: ["asc"],
+    why: "Apple shows a summary of this on your store page. It must match what the app really does.",
+    s: [
+      { t: "Open App Privacy in the left menu.", w: "asc" },
+      { t: "Privacy Policy: click Edit and paste your privacy policy web address. (You create that page in section 5. Return here if it is not ready yet.)", w: "asc" },
+      { t: "Under Data Types click Get Started. Answer whether you or your tools collect any data from the app.", w: "asc" },
+      { t: "If yes: for each data type say what it is used for, whether it is linked to the user, and whether it is used for tracking.", w: "asc", opt: true },
+      { t: "Click Publish.", w: "asc" },
+      { t: "Summarise here what the app collects, or write 'nothing'.", f: ["dataCollected"] }
+    ] },
+  { id: "price", ph: "p2", title: "Set price and availability", where: ["asc"],
+    why: "Even free apps need this step.",
+    s: [
+      { t: "In the left menu open Pricing and Availability.", w: "asc" },
+      { t: "Price: choose Free, or the price point nearest to your decision.", w: "asc" },
+      { t: "Availability: keep all countries, or choose specific ones.", w: "asc" },
+      { t: "iOS apps can also appear on Apple silicon Macs. Choose whether to allow that.", w: "asc", plat: ["ios"], opt: true }
+    ] },
+  { id: "ver", ph: "p2", title: "Version page: version number and review contact", where: ["asc"],
+    why: "The version page is where you will do most of the submission later. Set what you already know.",
+    s: [
+      { t: "In the left menu, under the platform name, click the version (shown as 1.0 Prepare for Submission).", w: "asc" },
+      { t: "Version number: use 1.0, or your first version. It must match the version in Xcode.", w: "asc", f: ["version"] },
+      { t: "App Review Information: type a first name, last name, phone number (with country code) and email for the reviewer.", w: "asc", f: ["reviewerName", "reviewerPhone", "reviewerEmail"] },
+      { t: "Sign-in required: say whether the app needs a login. If yes, create a throwaway demo account and enter it there.", w: "asc", f: ["loginRequired", "demoNote"] },
+      { t: "Notes: explain anything unusual to the reviewer, such as which permissions the app asks for and why.", w: "asc", opt: true, f: ["reviewNotes"] }
+    ] },
+  { id: "iap", ph: "p2", money: ["iap", "undecided"], title: "Create the in-app purchases or subscriptions", where: ["asc"],
+    why: "The first purchases must be attached to your first version when you submit it.",
+    s: [
+      { t: "In the app, open Monetization, then In-App Purchases (or Subscriptions).", w: "asc" },
+      { t: "Subscriptions only: first create a Subscription Group. This is the set of options a person can switch between.", w: "asc", f: ["subGroup"] },
+      { t: "Click the plus button. Choose the type (Consumable, Non-Consumable, Non-Renewing Subscription, or an auto-renewing subscription).", w: "asc" },
+      { t: "Reference Name and Product ID: use the ones you listed in section 1.", w: "asc" },
+      { t: "Choose the price point and the countries.", w: "asc" },
+      { t: "Add the display name and description people will see.", w: "asc" },
+      { t: "Review Information: add a screenshot of the purchase screen and any notes. You can come back to this once the app screens exist.", w: "asc", opt: true },
+      { t: "Check each product's status. It should say Ready to Submit, or tell you what is missing.", w: "asc" }
+    ] },
+  { id: "tf", ph: "p2", opt: true, title: "Create a TestFlight testing group", where: ["asc"],
+    why: "TestFlight is the safest way to try the real build before review. It works for Mac and iOS.",
+    s: [
+      { t: "In the app, open TestFlight, then Internal Testing, click the plus button, name the group and add yourself. (Testers must have App Store Connect access.)", w: "asc" },
+      { t: "Fill in Test Information: a short beta description and a feedback email.", w: "asc" }
+    ] },
+
+  /* ---------- 4. Folder, studio, Xcode ---------- */
+  { id: "folder", ph: "p3", title: "Create the project folder", where: ["term"],
+    why: "One folder for everything, easy to find and back up. Commands below fill in your values as you type them.",
+    s: [
+      { t: "Open Terminal. Press Cmd and Space, type Terminal, press Enter.", w: "term" },
+      { t: "Choose the folder location. Use lowercase with hyphens and no spaces. Type it here.", f: ["folder"] },
+      { t: "Create the folder and go into it.", w: "term", cmd: "mkdir -p {folder} && cd {folder}", cl: "Command" }
+    ] },
+  { id: "studio", ph: "p3", title: "Copy the studio framework into it", where: ["term"],
+    why: "So the specialist team, the approval gates and the Apple skills rules are there from day one. Change the source path if your best finished project lives somewhere else.",
+    s: [
+      { t: "Copy the rule file, the agent folder and the studio folder from a finished project.", w: "term", cmd: "cp ~/Apps/trackpad-lock/CLAUDE.md {folder}/ && cp -R ~/Apps/trackpad-lock/.claude {folder}/ && cp -R ~/Apps/trackpad-lock/studio {folder}/", cl: "Command" },
+      { t: "If the source project has a `workflow` folder, copy that too and reset its status for the new app.", w: "term", opt: true },
+      { t: "Do not copy the `backups` folder or any build output." },
+      { t: "Check the files arrived.", w: "term", cmd: "ls -la {folder}", cl: "Command" }
+    ] },
+  { id: "git", ph: "p3", title: "Put the folder under version control (git)", where: ["term", "web"],
+    why: "Gives you history and an undo button.",
+    s: [
+      { t: "Start git in the folder.", w: "term", cmd: "cd {folder} && git init", cl: "Command" },
+      { t: "Create a .gitignore file so junk and secrets never get saved.", w: "term", cmd: "printf '.DS_Store\\nxcuserdata/\\nDerivedData/\\nbuild/\\n*.xcuserstate\\n.env\\n' > .gitignore", cl: "Command" },
+      { t: "Save the first snapshot.", w: "term", cmd: "git add . && git commit -m \"Initial setup\"", cl: "Command" },
+      { t: "Optional: on github.com create a new Private repository, copy its address, paste it here, then connect it.", w: "web", opt: true, f: ["repo"], cmd: "git branch -M main && git remote add origin {repo} && git push -u origin main", cl: "Command" }
+    ] },
+  { id: "xcode", ph: "p3", opt: true, title: "Create the empty Xcode project", where: ["xc"],
+    why: "Doing it now proves signing works. If you would rather the Engineering stage creates it, skip this.",
+    s: [
+      { t: "Open Xcode. Choose File, New, Project.", w: "xc" },
+      { t: "Pick the macOS or iOS tab at the top, choose App, click Next.", w: "xc" },
+      { t: "Product Name: the app name. Team: your team. Organization Identifier: your bundle prefix. Check the Bundle Identifier shown below matches your bundle ID exactly.", w: "xc" },
+      { t: "Interface: SwiftUI. Language: Swift. Tick Include Tests. Click Next.", w: "xc" },
+      { t: "Save it inside your project folder. Untick Create Git repository if you already did git above.", w: "xc" },
+      { t: "Click the project name at the top of the left list, then General. Set Display Name, Version (1.0) and Build (1). Under Minimum Deployments choose the version from section 1.", w: "xc" },
+      { t: "Open Signing & Capabilities. Tick Automatically manage signing and choose your team.", w: "xc" },
+      { t: "Add App Sandbox with the + Capability button, and tick only the access the app needs (for example Outgoing Connections). Make sure Hardened Runtime is on.", w: "xc", plat: ["mac"] },
+      { t: "In General, set App Category to the category from section 1.", w: "xc", plat: ["mac"] },
+      { t: "In the Info tab add App Uses Non-Exempt Encryption and set it to NO, if the app only uses standard system encryption such as HTTPS. This avoids the encryption question at every upload.", w: "xc" },
+      { t: "Choose File, New, File, search for App Privacy and add it. This creates the privacy manifest. It gets filled in during the build.", w: "xc" },
+      { t: "Press Cmd and R to build and run the empty app. Confirm it opens.", w: "xc" }
+    ] },
+  { id: "icon", ph: "p3", opt: true, title: "Add a placeholder app icon", where: ["xc"],
+    why: "A build without an icon is rejected. A rough one is fine for now.",
+    s: [
+      { t: "In Xcode open Assets, then AppIcon.", w: "xc" },
+      { t: "iOS: drag a 1024 x 1024 PNG with no transparency into the slot. Mac: fill each size slot.", w: "xc" }
+    ] },
+
+  /* ---------- 5. Web pages ---------- */
+  { id: "pp", ph: "p4", title: "Publish the privacy policy", where: ["web", "cc", "asc"],
+    why: "Every app needs a public privacy policy web address, even apps that collect nothing.",
+    s: [
+      { t: "Draft the policy. In Claude Code you can ask: use the legal skill to draft a privacy policy for this app.", w: "cc" },
+      { t: "Check it says what data is collected (or that none is), why, who sees it, how long it is kept, and how to contact you." },
+      { t: "Publish it at a public address. Free options include GitHub Pages, your own site, or a public page on a notes tool.", w: "web", l: ["ghp"] },
+      { t: "Open the address in a private browser window to prove it works without logging in. Then paste it here.", w: "web", f: ["privacyUrl"] },
+      { t: "Go back to App Store Connect, App Privacy, Privacy Policy, and paste it there.", w: "asc" }
+    ] },
+  { id: "sup", ph: "p4", title: "Publish a support page and email", where: ["web", "asc"],
+    why: "Users and reviewers need a way to reach you.",
+    s: [
+      { t: "Create an email address you will actually read. Type it here.", f: ["supportEmail"] },
+      { t: "Create a simple page with the app name, a short help text and that email address, and publish it.", w: "web" },
+      { t: "Paste the page address here, and test it in a private window.", w: "web", f: ["supportUrl"] },
+      { t: "In App Store Connect, on the version page, paste it into Support URL.", w: "asc" }
+    ] },
+  { id: "terms", ph: "p4", opt: true, title: "Terms of use (optional)", where: ["web"],
+    why: "Apple supplies a standard agreement. You only need your own for different terms. Subscription apps should always show terms.",
+    s: [ { t: "If you want your own terms, publish them and paste the address here.", w: "web", f: ["termsUrl"] } ] },
+  { id: "land", ph: "p4", opt: true, title: "Landing page (optional)", where: ["web"],
+    why: "Useful for press and for people who find you outside the store.",
+    s: [ { t: "One page with the name, a one-line promise, screenshots and a store link. Paste the address here when it exists.", w: "web", f: ["marketingUrl"] } ] },
+
+  /* ---------- 6. Hand-over ---------- */
+  { id: "hand", ph: "p5", title: "Save the project sheet and start the studio", where: ["term", "cc"],
+    why: "This is the finish line for setup. The studio reads the sheet instead of asking you the same questions.",
+    s: [
+      { t: "Scroll to Project sheet at the bottom of this page. Check the 'Still missing' list is empty." },
+      { t: "Click Download project sheet. A file called PROJECT_SETUP.md is saved in your Downloads folder." },
+      { t: "Move it into the project folder.", w: "term", cmd: "mv ~/Downloads/PROJECT_SETUP.md {folder}/studio/PROJECT_SETUP.md", cl: "Command" },
+      { t: "Open Claude Code in the folder.", w: "term", cmd: "cd {folder} && claude", cl: "Command" },
+      { t: "Send this as your first message.", w: "cc", cmd: "Read studio/PROJECT_SETUP.md. All setup is done and those values are final. Do not ask me for them again. Tell me where the project stands in the studio workflow.", cl: "Message" }
+    ] },
+
+  /* ---------- 7. Store listing ---------- */
+  { id: "text", ph: "p6", title: "Write the store text", where: ["asc"],
+    why: "This is the sales page. All of it lives on the version page in App Store Connect.",
+    s: [
+      { t: "Description: say what the app does for the person in the first two lines. Only those lines show before 'more'.", w: "asc", f: ["description"] },
+      { t: "Keywords: separate with commas, no spaces after commas. Do not repeat the app name or category.", w: "asc", f: ["keywords"] },
+      { t: "Promotional text: can be changed at any time without a new review.", w: "asc", f: ["promo"] },
+      { t: "What's New: for a first version, 'First release.' is fine.", w: "asc", f: ["whatsNew"] },
+      { t: "Copyright: the year and your name or company.", w: "asc", f: ["copyright"] }
+    ] },
+  { id: "shotMac", ph: "p6", plat: ["mac"], title: "Take the Mac screenshots", where: ["asc"],
+    why: "At least one is required, up to ten.",
+    s: [
+      { t: "Run the app. Press Cmd, Shift and 5 to capture. Use a window shaped 16:10, for example 1440 x 900 or 2880 x 1800." },
+      { t: "On the version page drag the screenshots into the Mac screenshots box.", w: "asc" },
+      { t: "If App Store Connect says a size is wrong, resize and retry. The accepted sizes are listed there.", w: "asc" }
+    ] },
+  { id: "shotIos", ph: "p6", plat: ["ios"], title: "Take the iPhone and iPad screenshots", where: ["sim", "asc"],
+    why: "At least one is required, up to ten per size.",
+    s: [
+      { t: "Run the app in the Simulator on the largest iPhone. Press Cmd and S to save a screenshot to the Desktop.", w: "sim" },
+      { t: "On the version page drag them into the largest iPhone box. Smaller sizes are scaled where allowed.", w: "asc" },
+      { t: "If iPad is supported, do the same with the largest iPad.", w: "sim", opt: true }
+    ] },
+  { id: "video", ph: "p6", opt: true, title: "App preview video and extra languages (optional)", where: ["asc"],
+    why: "Not required.",
+    s: [
+      { t: "App preview: a clip up to 30 seconds recorded from the real app.", w: "asc" },
+      { t: "Extra languages: translate name, subtitle, description, keywords and screenshots for each one you add.", w: "asc" }
+    ] },
+
+  /* ---------- 8. Test ---------- */
+  { id: "up", ph: "p7", title: "Build and upload to App Store Connect", where: ["xc"],
+    why: "This is also how the final build gets uploaded, so it doubles as a rehearsal.",
+    s: [
+      { t: "In Xcode raise the Build number if you have uploaded before (General, Build).", w: "xc" },
+      { t: "In the toolbar choose the destination Any Mac.", w: "xc", plat: ["mac"] },
+      { t: "In the toolbar choose the destination Any iOS Device.", w: "xc", plat: ["ios"] },
+      { t: "Choose the Product menu, then Archive. Wait for the Organizer window.", w: "xc" },
+      { t: "Click Validate App and fix anything it reports.", w: "xc" },
+      { t: "Click Distribute App, choose App Store Connect, then Distribute (Upload).", w: "xc" },
+      { t: "Wait for the email saying processing is finished. It can take from a few minutes to over half an hour.", w: "asc" }
+    ] },
+  { id: "tfi", ph: "p7", title: "Install the build through TestFlight", where: ["asc"],
+    why: "Tests the real signed build, not the one on your development machine.",
+    s: [
+      { t: "In App Store Connect open the app, then TestFlight. The build appears when processed.", w: "asc" },
+      { t: "If it asks about export compliance, answer it.", w: "asc", opt: true },
+      { t: "Add the build to your internal group.", w: "asc" },
+      { t: "Install the TestFlight app (from the Mac App Store or iPhone App Store), accept the invite and install the build." }
+    ] },
+  { id: "clean", ph: "p7", title: "Test on a clean setup", where: ["note"],
+    why: "Finds permission and first-launch problems that never show on your own machine.",
+    s: [
+      { t: "Use another Mac or device, or a fresh user account on yours." },
+      { t: "Go through first launch, every permission prompt, quitting and reopening." },
+      { t: "Check the app behaves with no internet connection, if it uses the network." }
+    ] },
+  { id: "iapt", ph: "p7", money: ["iap"], title: "Test purchases and restore", where: ["asc"],
+    why: "A broken purchase flow is an instant rejection.",
+    s: [
+      { t: "In App Store Connect, under Users and Access, create a Sandbox tester account.", w: "asc" },
+      { t: "Buy, cancel, renew (subscriptions) and restore. Check the app unlocks and locks correctly." }
+    ] },
+  { id: "pre", ph: "p7", title: "Run the pre-submission review", where: ["cc"],
+    why: "A last look at privacy, permissions and review risks. It is a checklist input. The Security stage stays in charge of sign-off.",
+    s: [
+      { t: "In Claude Code ask for the release review checklist on the finished build.", w: "cc" },
+      { t: "Remove debug code, test data and leftover logging." }
+    ] },
+
+  /* ---------- 9. Submit ---------- */
+  { id: "att", ph: "p8", title: "Attach the build and check every section", where: ["asc"],
+    why: "Missing items show as warnings and block the Submit button.",
+    s: [
+      { t: "On the version page find the Build section and click the plus (Add Build). Pick the processed build.", w: "asc" },
+      { t: "Scroll the whole page. Fix every red or yellow warning.", w: "asc" },
+      { t: "If it asks about the Advertising Identifier (IDFA), answer. Most apps answer No.", w: "asc" },
+      { t: "iOS: add your purchases to the version if the app has any.", w: "asc", money: ["iap"] }
+    ] },
+  { id: "rel", ph: "p8", title: "Choose how the release happens", where: ["asc"],
+    why: "You control when people can download it.",
+    s: [ { t: "On the version page, find Version Release and choose one. Manual lets you press the button when ready.", w: "asc", f: ["release"] } ] },
+  { id: "sub", ph: "p8", title: "Submit for review", where: ["asc"],
+    why: "Reviews often take a day or two, but it varies.",
+    s: [
+      { t: "Click Add for Review at the top right, then Submit to App Review.", w: "asc" },
+      { t: "Watch the status. It moves through Waiting for Review and In Review. (Status names can vary slightly.)", w: "asc" },
+      { t: "If it is rejected: open Resolution Center, read the exact point, fix it, reply, and resubmit.", w: "asc", opt: true }
+    ] },
+  { id: "live", ph: "p8", title: "Go live and check", where: ["asc"],
+    why: "Confirm the public page is right.",
+    s: [
+      { t: "If you chose manual release, click Release This Version.", w: "asc", opt: true },
+      { t: "Search the store for the app. Open the page and check text, images and price." },
+      { t: "Download it from the store once and run it." }
+    ] }
+  ];
+
   var PLAT_NAME = { mac: "macOS (Mac App Store)", ios: "iPhone / iPad", both: "macOS and iPhone / iPad" };
   var MONEY_NAME = { undecided: "Not decided yet", free: "Free, no purchases", paid: "Paid upfront", iap: "Subscription / in-app purchases" };
 
-  /* ---------- Storage (safe even if blocked) ---------- */
-  var KEY = "appSetupChecklist.v1";
+  /* ================= STATE ================= */
+
+  var KEY = "appSetupChecklist.v2", OLD = "appSetupChecklist.v1";
   var memory = null;
   function load() {
-    try { var raw = localStorage.getItem(KEY); if (raw) return JSON.parse(raw); } catch (e) {}
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) return JSON.parse(raw);
+      var old = localStorage.getItem(OLD);
+      if (old) { // carry over typed details from the first version
+        var o = JSON.parse(old);
+        Object.keys(o.projects || {}).forEach(function (id) { o.projects[id].checks = {}; o.projects[id].open = {}; });
+        return o;
+      }
+    } catch (e) {}
     return memory;
   }
-  function persist() {
-    memory = state;
-    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
-  }
-  function newProject(name) {
-    return { name: name, platform: "mac", money: "undecided", checks: {}, fields: {}, open: {} };
-  }
+  function persist() { memory = state; try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+  function newProject(name) { return { name: name, platform: "mac", money: "undecided", checks: {}, fields: {}, open: {} }; }
   var state = load();
-  if (!state || !state.projects || !Object.keys(state.projects).length) {
-    state = { current: "p1", projects: { p1: newProject("My first app") } };
-  }
+  if (!state || !state.projects || !Object.keys(state.projects).length) state = { current: "p1", projects: { p1: newProject("My first app") } };
   if (!state.projects[state.current]) state.current = Object.keys(state.projects)[0];
   function cur() { return state.projects[state.current]; }
 
-  /* ---------- Helpers ---------- */
+  /* ================= HELPERS ================= */
+
   function $(id) { return document.getElementById(id); }
-  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
-  // Content strings are written by us; allow only <code> tags through.
-  function rich(s) { return String(s).replace(/<code>/g, "\u0001").replace(/<\/code>/g, "\u0002"); }
-  function richOut(s) { return esc(rich(s)).replace(/\u0001/g, "<code>").replace(/\u0002/g, "</code>"); }
-  function say(msg) { $("status").textContent = msg; }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  function rich(s) { return esc(s).replace(/`([^`]+)`/g, "<code>$1</code>"); }
+  function say(m) { $("status").textContent = m; }
+  function gateOf(phId) { for (var i = 0; i < PHASES.length; i++) if (PHASES[i].id === phId) return PHASES[i].gate; return "submit"; }
+  function val(k) { var v = cur().fields[k]; return v && String(v).trim() ? String(v).trim() : ""; }
 
-  function visible(item, p) {
-    if (item.plat && p.platform !== "both" && item.plat.indexOf(p.platform) === -1) return false;
-    if (item.money && item.money.indexOf(p.money) === -1) return false;
+  function itemVisible(it, p) {
+    if (it.plat && p.platform !== "both" && it.plat.indexOf(p.platform) === -1) return false;
+    if (it.money && it.money.indexOf(p.money) === -1) return false;
     return true;
   }
-  function required(item, p) {
-    if (!item.req) return false;
-    if (item.money && p.money === "undecided") return false;
+  function stepVisible(it, s, p) {
+    if (!itemVisible(it, p)) return false;
+    if (s.plat && p.platform !== "both" && s.plat.indexOf(p.platform) === -1) return false;
+    if (s.money && s.money.indexOf(p.money) === -1) return false;
     return true;
   }
-  function phaseGate(id) { for (var i = 0; i < PHASES.length; i++) if (PHASES[i].id === id) return PHASES[i].gate; return "submit"; }
+  function stepRequired(it, s, p) {
+    if (it.opt || s.opt) return false;
+    if ((s.money || it.money) && p.money === "undecided") return false;
+    return true;
+  }
+  function sid(it, i) { return it.id + "." + i; }
 
-  /* ---------- Render ---------- */
-  function renderProjectBar() {
-    var sel = $("projectSelect");
-    sel.textContent = "";
-    Object.keys(state.projects).forEach(function (id) {
-      var o = document.createElement("option");
-      o.value = id; o.textContent = state.projects[id].name;
-      if (id === state.current) o.selected = true;
-      sel.appendChild(o);
+  /* ================= STATS ================= */
+
+  function stats() {
+    var p = cur(), r = { start: { tot: 0, done: 0, ft: 0, fd: 0, miss: [] }, all: { tot: 0, done: 0, ft: 0, fd: 0, miss: [] }, visFields: {} };
+    ITEMS.forEach(function (it) {
+      var g = gateOf(it.ph);
+      it.s.forEach(function (s, i) {
+        if (!stepVisible(it, s, p)) return;
+        (s.f || []).forEach(function (k) { r.visFields[k] = true; });
+        if (!stepRequired(it, s, p)) return;
+        var d = p.checks[sid(it, i)] ? 1 : 0;
+        r.all.tot++; r.all.done += d;
+        if (g === "start") { r.start.tot++; r.start.done += d; }
+        (s.f || []).forEach(function (k) {
+          if (FIELDS[k].opt) return;
+          var filled = !!val(k);
+          r.all.ft++; if (filled) r.all.fd++; else r.all.miss.push(FIELDS[k].label);
+          if (g === "start") { r.start.ft++; if (filled) r.start.fd++; else r.start.miss.push(FIELDS[k].label); }
+        });
+      });
     });
-    $("platformSel").value = cur().platform;
-    $("moneySel").value = cur().money;
+    return r;
   }
 
-  function fieldHtml(f, p) {
-    var val = p.fields[f.k] || "";
-    var type = f.type === "url" ? "url" : f.type === "email" ? "email" : "text";
-    var out = '<label class="f">' + esc(f.label) +
-      '<input type="' + type + '" data-field="' + f.k + '"' + (f.max ? ' data-max="' + f.max + '"' : "") +
-      ' data-ftype="' + (f.type || "") + '" value="' + esc(val).replace(/"/g, "&quot;") + '" autocomplete="off" spellcheck="false">';
-    if (f.max) out += '<span class="count" data-count="' + f.k + '"></span>';
-    if (f.type === "bundle") out += '<span class="hint" data-hint="' + f.k + '"></span>';
-    out += "</label>";
-    return out;
+  /* ================= SHEET ================= */
+
+  function sheetText() {
+    var p = cur(), st = stats();
+    var L2 = ["# PROJECT SETUP SHEET", "",
+      "Source: App Setup Checklist, filled in by the Founder on " + new Date().toISOString().slice(0, 10) + ".",
+      "These are final values. Treat them as authoritative inputs. Do not ask for them again and do not invent alternatives. If something here looks wrong, flag it to the Founder.", "",
+      "## Profile", "- Project: " + p.name, "- Platform: " + PLAT_NAME[p.platform], "- Business model: " + MONEY_NAME[p.money], ""];
+    SECTIONS.forEach(function (sec) {
+      var rows = [];
+      Object.keys(FIELDS).forEach(function (k) {
+        var f = FIELDS[k];
+        if (f.sec !== sec || !st.visFields[k]) return;
+        var v = val(k);
+        if (!v && f.opt) return;
+        rows.push("- **" + f.label + ":** " + (v ? v.replace(/\n/g, "\n  ") : "_not provided_"));
+      });
+      if (rows.length) L2.push("## " + sec, rows.join("\n"), "");
+    });
+    var open = [];
+    ITEMS.forEach(function (it) {
+      if (gateOf(it.ph) !== "start") return;
+      var left = 0;
+      it.s.forEach(function (s, i) { if (stepVisible(it, s, p) && stepRequired(it, s, p) && !p.checks[sid(it, i)]) left++; });
+      if (left) open.push("- " + it.title + " (" + left + " step" + (left === 1 ? "" : "s") + ")");
+    });
+    st.start.miss.forEach(function (m) { open.push("- Detail not filled in: " + m); });
+    L2.push("## Still missing before the build should start");
+    L2.push(open.length ? open.join("\n") : "Nothing. All required setup steps and details are complete.");
+    return L2.join("\n");
+  }
+
+  /* ================= RENDER ================= */
+
+  function fieldHtml(k) {
+    var f = FIELDS[k], v = cur().fields[k] || "", type = f.type || "text", id = "fld_" + k;
+    var out = '<label class="f" for="' + id + '">' + esc(f.label) + (f.opt ? " (optional)" : "");
+    if (type === "area") out += '<textarea id="' + id + '" data-field="' + k + '"' + (f.ph ? ' placeholder="' + esc(f.ph) + '"' : "") + (f.max ? ' data-max="' + f.max + '"' : "") + ">" + esc(v) + "</textarea>";
+    else if (type === "select") {
+      out += '<select id="' + id + '" data-field="' + k + '"><option value="">Choose...</option>';
+      f.opts.forEach(function (o) { out += '<option value="' + esc(o) + '"' + (o === v ? " selected" : "") + ">" + esc(o) + "</option>"; });
+      out += "</select>";
+    } else {
+      var it = type === "url" ? "url" : type === "email" ? "email" : "text";
+      out += '<input id="' + id + '" type="' + it + '" data-field="' + k + '" data-ftype="' + type + '"' + (f.max ? ' data-max="' + f.max + '"' : "") +
+        (f.ph ? ' placeholder="' + esc(f.ph) + '"' : "") + ' value="' + esc(v) + '" autocomplete="off" spellcheck="false">';
+    }
+    if (f.max) out += '<span class="count" data-count="' + k + '"></span>';
+    if (type === "bundle") out += '<span class="hint" data-hint="' + k + '"></span>';
+    if (f.help) out += '<span class="help">' + esc(f.help) + "</span>";
+    return out + "</label>";
   }
 
   function renderPhases() {
     var p = cur(), html = "";
     PHASES.forEach(function (ph) {
-      var items = ITEMS.filter(function (it) { return it.phase === ph.id && visible(it, p); });
+      var items = ITEMS.filter(function (it) { return it.ph === ph.id && itemVisible(it, p); });
       if (!items.length) return;
-      var done = items.filter(function (it) { return p.checks[it.id]; }).length;
-      html += '<section class="phase"><div class="phase-h"><h2>' + esc(ph.title) + "</h2><small>" + done + " of " + items.length + " done</small></div>";
-      html += '<p class="phase-note">' + esc(ph.note) + "</p>";
+      html += '<section class="phase"><div class="phase-h"><h2>' + esc(ph.title) + '</h2><small data-pcount="' + ph.id + '"></small></div><p class="phase-note">' + esc(ph.note) + "</p>";
       items.forEach(function (it) {
-        var checked = !!p.checks[it.id], open = !!p.open[it.id], isReq = required(it, p);
-        html += '<div class="item' + (checked ? " checked" : "") + (open ? " open" : "") + '" data-item="' + it.id + '">';
-        html += '<div class="item-top"><input type="checkbox" data-check="' + it.id + '"' + (checked ? " checked" : "") + ' aria-label="Done: ' + esc(it.title) + '">';
-        html += '<div style="flex:1;min-width:0"><button class="item-title" data-toggle="' + it.id + '" aria-expanded="' + open + '">' + esc(it.title) + "</button>";
-        html += '<div class="tags"><span class="tag' + (isReq ? " req" : "") + '">' + (isReq ? "Required" : "Optional") + "</span>";
-        if (it.plat && it.plat.length === 1) html += '<span class="tag">' + (it.plat[0] === "mac" ? "macOS" : "iOS") + " only</span>";
-        if (it.money) html += '<span class="tag">Paid / purchases</span>';
-        html += "</div></div>";
-        html += '<button class="chev noprint" data-toggle="' + it.id + '" aria-hidden="true" tabindex="-1">' + (open ? "Hide" : "Details") + "</button></div>";
-        html += '<div class="body"><p class="why">' + richOut(it.why) + "</p>";
-        if (it.steps) { html += "<ol>"; it.steps.forEach(function (s) { html += "<li>" + richOut(s) + "</li>"; }); html += "</ol>"; }
-        if (it.fields) { html += '<div class="fields">'; it.fields.forEach(function (f) { html += fieldHtml(f, p); }); html += "</div>"; }
+        var open = !!p.open[it.id], anyReq = false;
+        it.s.forEach(function (s) { if (stepRequired(it, s, p)) anyReq = true; });
+        html += '<div class="item' + (open ? " open" : "") + '" data-item="' + it.id + '">';
+        html += '<button class="item-head" data-toggle="' + it.id + '" aria-expanded="' + open + '"><span style="flex:1;min-width:0"><span class="item-title">' + esc(it.title) + "</span>";
+        html += '<span class="tags" style="display:flex"><span class="tag' + (anyReq ? " req" : "") + '">' + (anyReq ? "Required" : "Optional") + "</span>";
+        (it.where || []).forEach(function (w) { html += '<span class="tag where">' + esc(TOOLS[w]) + "</span>"; });
+        html += '</span></span><span class="prog" data-iprog="' + it.id + '"></span></button>';
+        html += '<div class="body"><p class="why">' + rich(it.why) + "</p>";
+        it.s.forEach(function (s, i) {
+          if (!stepVisible(it, s, p)) return;
+          var id = sid(it, i), ck = !!p.checks[id];
+          html += '<div class="step' + (ck ? " checked" : "") + '" data-step="' + id + '"><input type="checkbox" id="c_' + id + '" data-check="' + id + '"' + (ck ? " checked" : "") + '><div class="step-main">';
+          html += '<label for="c_' + id + '" class="step-text">' + (s.w ? '<span class="w">' + esc(TOOLS[s.w]) + "</span>" : "") + rich(s.t) +
+            (stepRequired(it, s, p) ? "" : '<span class="opt-tag">optional</span>') + "</label>";
+          if (s.l) { html += '<div class="links">'; s.l.forEach(function (k) { html += '<a href="' + L[k][1] + '" target="_blank" rel="noopener noreferrer">' + esc(L[k][0]) + " &#8599;</a>"; }); html += "</div>"; }
+          if (s.cmd) {
+            html += '<div class="cmd-label">' + esc(s.cl || "Command") + '</div><div class="cmdbox"><pre data-cmd="' + esc(s.cmd) + '"></pre><button class="small" data-copycmd="1">Copy</button></div>';
+          }
+          if (s.f) { html += '<div class="fields">'; s.f.forEach(function (k) { html += fieldHtml(k); }); html += "</div>"; }
+          html += "</div></div>";
+        });
         html += "</div></div>";
       });
       html += "</section>";
     });
     $("phases").innerHTML = html;
-    updateAllCounters();
+    Array.prototype.forEach.call(document.querySelectorAll("[data-field]"), updateCounter);
+    updateUI();
   }
 
-  function updateCounter(input) {
-    var max = +input.getAttribute("data-max");
-    var k = input.getAttribute("data-field");
+  function updateCounter(el) {
+    var k = el.getAttribute("data-field"), max = +el.getAttribute("data-max");
     if (max) {
       var c = document.querySelector('[data-count="' + k + '"]');
-      if (c) { c.textContent = input.value.length + " / " + max; c.className = "count" + (input.value.length > max ? " over" : ""); }
+      if (c) { c.textContent = el.value.length + " / " + max; c.className = "count" + (el.value.length > max ? " over" : ""); }
     }
-    if (input.getAttribute("data-ftype") === "bundle") {
-      var h = document.querySelector('[data-hint="' + k + '"]');
-      if (h) {
-        var v = input.value.trim();
-        h.textContent = v && !/^[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$/.test(v) ? "Use letters, numbers, hyphens and at least one dot, for example com.name.app" : "";
-      }
+    if (el.getAttribute("data-ftype") === "bundle") {
+      var h = document.querySelector('[data-hint="' + k + '"]'), v = el.value.trim();
+      if (h) h.textContent = v && !/^[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)+$/.test(v) ? "Use letters, numbers, hyphens and at least one dot, for example com.name.app" : "";
     }
-  }
-  function updateAllCounters() {
-    Array.prototype.forEach.call(document.querySelectorAll("input[data-field]"), updateCounter);
   }
 
-  function renderProgress() {
-    var p = cur(), sTot = 0, sDone = 0, aTot = 0, aDone = 0;
-    ITEMS.forEach(function (it) {
-      if (!visible(it, p) || !required(it, p)) return;
-      var d = p.checks[it.id] ? 1 : 0;
-      aTot++; aDone += d;
-      if (phaseGate(it.phase) === "start") { sTot++; sDone += d; }
+  function updateCmds() {
+    Array.prototype.forEach.call(document.querySelectorAll("pre[data-cmd]"), function (pre) {
+      var tpl = pre.getAttribute("data-cmd");
+      pre.textContent = tpl.replace(/\{(\w+)\}/g, function (_, k) { return val(k) || "<" + (FIELDS[k] ? FIELDS[k].label : k) + ">"; });
     });
-    var sPct = sTot ? Math.round(sDone / sTot * 100) : 100, aPct = aTot ? Math.round(aDone / aTot * 100) : 100;
-    $("startPct").textContent = sPct + "%"; $("allPct").textContent = aPct + "%";
-    $("startBar").firstElementChild.style.width = sPct + "%"; $("allBar").firstElementChild.style.width = aPct + "%";
-    $("startBar").className = "bar" + (sPct === 100 ? " done" : ""); $("allBar").className = "bar" + (aPct === 100 ? " done" : "");
-    var b = $("banner");
-    if (sPct === 100) { b.className = "banner go"; b.textContent = "Setup complete. You can start the Product stage of the build now."; }
-    else { b.className = "banner wait"; b.textContent = (sTot - sDone) + " required item" + (sTot - sDone === 1 ? "" : "s") + " left before the build should start."; }
-    if (aPct === 100) { b.className = "banner go"; b.textContent = "Everything is done. Submit for review."; }
   }
 
-  function sheetText() {
-    var p = cur(), lines = ["PROJECT SETUP SHEET", "Project: " + p.name, "Platform: " + PLAT_NAME[p.platform], "Business model: " + MONEY_NAME[p.money], ""];
-    SHEET_ORDER.forEach(function (k) { if (p.fields[k]) lines.push(FIELD_LABELS[k] + ": " + p.fields[k]); });
-    var missing = [];
-    ITEMS.forEach(function (it) { if (visible(it, p) && required(it, p) && phaseGate(it.phase) === "start" && !p.checks[it.id]) missing.push("- " + it.title); });
-    lines.push("", missing.length ? "Still open before build start:" : "All required setup items before build start are done.");
-    return lines.concat(missing).join("\n");
+  function updateUI() {
+    var p = cur(), st = stats();
+    // per item and phase counts
+    ITEMS.forEach(function (it) {
+      if (!itemVisible(it, p)) return;
+      var tot = 0, done = 0;
+      it.s.forEach(function (s, i) { if (stepVisible(it, s, p)) { tot++; if (p.checks[sid(it, i)]) done++; } });
+      var el = document.querySelector('[data-iprog="' + it.id + '"]'), box = document.querySelector('[data-item="' + it.id + '"]');
+      if (el) el.textContent = done + " of " + tot;
+      if (box) box.classList.toggle("done", tot > 0 && done === tot);
+    });
+    PHASES.forEach(function (ph) {
+      var tot = 0, done = 0;
+      ITEMS.forEach(function (it) {
+        if (it.ph !== ph.id) return;
+        it.s.forEach(function (s, i) { if (stepVisible(it, s, p)) { tot++; if (p.checks[sid(it, i)]) done++; } });
+      });
+      var el = document.querySelector('[data-pcount="' + ph.id + '"]');
+      if (el) el.textContent = done + " of " + tot + " steps";
+    });
+    // bars
+    function pct(a, b) { return b ? Math.round(a / b * 100) : 100; }
+    var sp = pct(st.start.done + st.start.fd, st.start.tot + st.start.ft), ap = pct(st.all.done + st.all.fd, st.all.tot + st.all.ft);
+    $("startPct").textContent = sp + "%"; $("allPct").textContent = ap + "%";
+    $("startBar").firstElementChild.style.width = sp + "%"; $("allBar").firstElementChild.style.width = ap + "%";
+    $("startBar").className = "bar" + (sp === 100 ? " done" : ""); $("allBar").className = "bar" + (ap === 100 ? " done" : "");
+    var stepsLeft = st.start.tot - st.start.done, detLeft = st.start.ft - st.start.fd, b = $("banner");
+    if (stepsLeft === 0 && detLeft === 0) { b.className = "banner go"; b.textContent = "Setup complete. Download the project sheet and start the Product stage."; }
+    else { b.className = "banner wait"; b.textContent = stepsLeft + " required step" + (stepsLeft === 1 ? "" : "s") + " and " + detLeft + " detail" + (detLeft === 1 ? "" : "s") + " left before the build should start."; }
+    if (ap === 100) { b.className = "banner go"; b.textContent = "Everything is done. Submit for review."; }
+    $("detailLine").textContent = "Details typed in: " + st.all.fd + " of " + st.all.ft + " required.";
+    $("sheet").textContent = sheetText();
+    updateCmds();
   }
-  function renderSheet() { $("sheet").textContent = sheetText(); }
-  function renderAll() { renderProjectBar(); renderPhases(); renderProgress(); renderSheet(); }
-  function refreshLight() { renderProgress(); renderSheet(); }
 
-  /* ---------- Events ---------- */
+  function renderAll() {
+    var sel = $("projectSelect"); sel.textContent = "";
+    Object.keys(state.projects).forEach(function (id) {
+      var o = document.createElement("option"); o.value = id; o.textContent = state.projects[id].name; if (id === state.current) o.selected = true; sel.appendChild(o);
+    });
+    $("platformSel").value = cur().platform; $("moneySel").value = cur().money;
+    renderPhases();
+  }
+
+  /* ================= EVENTS ================= */
+
   $("phases").addEventListener("change", function (e) {
-    var id = e.target.getAttribute("data-check");
-    if (!id) return;
-    cur().checks[id] = e.target.checked; persist();
-    var box = e.target.closest(".item"); if (box) box.classList.toggle("checked", e.target.checked);
-    var h = box.parentNode.querySelector(".phase-h small");
-    renderPhases(); refreshLight();
+    var t = e.target, id = t.getAttribute("data-check");
+    if (id) {
+      cur().checks[id] = t.checked; persist();
+      var row = t.closest(".step"); if (row) row.classList.toggle("checked", t.checked);
+      updateUI(); return;
+    }
+    var k = t.getAttribute("data-field");
+    if (k && t.tagName === "SELECT") { cur().fields[k] = t.value; persist(); updateUI(); }
   });
   $("phases").addEventListener("input", function (e) {
     var k = e.target.getAttribute("data-field");
-    if (!k) return;
-    cur().fields[k] = e.target.value; persist(); updateCounter(e.target); renderSheet();
+    if (!k || e.target.tagName === "SELECT") return;
+    cur().fields[k] = e.target.value; persist(); updateCounter(e.target); updateUI();
   });
   $("phases").addEventListener("click", function (e) {
-    var t = e.target.closest("[data-toggle]");
-    if (!t) return;
+    var cp = e.target.closest("[data-copycmd]");
+    if (cp) {
+      var text = cp.parentNode.querySelector("pre").textContent;
+      copyText(text, cp.parentNode.querySelector("pre"), function () { cp.textContent = "Copied"; setTimeout(function () { cp.textContent = "Copy"; }, 1500); });
+      return;
+    }
+    var t = e.target.closest("[data-toggle]"); if (!t) return;
     var id = t.getAttribute("data-toggle"), p = cur();
     p.open[id] = !p.open[id]; persist();
     var box = document.querySelector('[data-item="' + id + '"]');
-    box.classList.toggle("open", p.open[id]);
-    box.querySelector(".item-title").setAttribute("aria-expanded", String(!!p.open[id]));
-    box.querySelector(".chev").textContent = p.open[id] ? "Hide" : "Details";
+    box.classList.toggle("open", p.open[id]); t.setAttribute("aria-expanded", String(!!p.open[id]));
+  });
+  $("expandBtn").addEventListener("click", function () {
+    var p = cur(), any = ITEMS.some(function (it) { return itemVisible(it, p) && !p.open[it.id]; });
+    ITEMS.forEach(function (it) { if (itemVisible(it, p)) p.open[it.id] = any; });
+    persist(); renderPhases(); $("expandBtn").textContent = any ? "Collapse all" : "Expand all";
   });
   $("projectSelect").addEventListener("change", function (e) { state.current = e.target.value; persist(); renderAll(); });
   $("platformSel").addEventListener("change", function (e) { cur().platform = e.target.value; persist(); renderAll(); });
   $("moneySel").addEventListener("change", function (e) { cur().money = e.target.value; persist(); renderAll(); });
-
   $("newBtn").addEventListener("click", function () {
-    var name = window.prompt("Name for the new project:", "");
-    if (!name || !name.trim()) return;
-    var id = "p" + Date.now();
-    state.projects[id] = newProject(name.trim()); state.current = id; persist(); renderAll();
+    var n = window.prompt("Name for the new project:", ""); if (!n || !n.trim()) return;
+    var id = "p" + Date.now(); state.projects[id] = newProject(n.trim()); state.current = id; persist(); renderAll();
   });
   $("renameBtn").addEventListener("click", function () {
-    var name = window.prompt("New name:", cur().name);
-    if (!name || !name.trim()) return;
-    cur().name = name.trim(); persist(); renderAll();
+    var n = window.prompt("New name:", cur().name); if (!n || !n.trim()) return; cur().name = n.trim(); persist(); renderAll();
   });
   $("deleteBtn").addEventListener("click", function () {
-    var ids = Object.keys(state.projects);
-    if (ids.length < 2) { say("You need at least one project, so this one cannot be deleted."); return; }
-    if (!window.confirm('Delete "' + cur().name + '" and all its ticks and notes? This cannot be undone.')) return;
+    if (Object.keys(state.projects).length < 2) { say("You need at least one project, so this one cannot be deleted."); return; }
+    if (!window.confirm('Delete "' + cur().name + '" with all its ticks and details? This cannot be undone.')) return;
     delete state.projects[state.current]; state.current = Object.keys(state.projects)[0]; persist(); renderAll();
   });
 
-  $("copyBtn").addEventListener("click", function () {
-    var text = sheetText();
+  function copyText(text, node, done) {
+    function fallback() {
+      var r = document.createRange(); r.selectNodeContents(node); var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      say("Selected the text. Press Cmd+C (or Ctrl+C) to copy it.");
+    }
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(function () { say("Copied. Paste it into your first message."); },
-        function () { fallbackCopy(text); });
-    } else fallbackCopy(text);
-  });
-  function fallbackCopy(text) {
-    var r = document.createRange(); r.selectNodeContents($("sheet"));
-    var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-    say("Selected the text. Press Cmd+C (or Ctrl+C) to copy it.");
+      navigator.clipboard.writeText(text).then(function () { if (done) done(); else say("Copied."); }, fallback);
+    } else fallback();
   }
-  $("exportBtn").addEventListener("click", function () {
-    var blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
-    var a = document.createElement("a");
-    a.href = URL.createObjectURL(blob); a.download = "app-setup-checklist-backup.json";
-    document.body.appendChild(a); a.click(); a.remove();
+  $("copyBtn").addEventListener("click", function () { copyText(sheetText(), $("sheet")); });
+  function download(name, text, type) {
+    var blob = new Blob([text], { type: type }), a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
-    say("Backup file downloaded.");
-  });
+  }
+  $("downloadBtn").addEventListener("click", function () { download("PROJECT_SETUP.md", sheetText(), "text/markdown"); say("Downloaded PROJECT_SETUP.md. Move it into your project's studio folder."); });
+  $("exportBtn").addEventListener("click", function () { download("app-setup-checklist-backup.json", JSON.stringify(state, null, 2), "application/json"); say("Backup file downloaded."); });
   $("importBtn").addEventListener("click", function () { $("importFile").click(); });
   $("importFile").addEventListener("change", function (e) {
     var f = e.target.files[0]; if (!f) return;
     var rd = new FileReader();
     rd.onload = function () {
       try {
-        var data = JSON.parse(rd.result);
-        if (!data || !data.projects || typeof data.projects !== "object" || !Object.keys(data.projects).length) throw new Error("bad");
+        var d = JSON.parse(rd.result);
+        if (!d || !d.projects || typeof d.projects !== "object" || !Object.keys(d.projects).length) throw new Error("bad");
         if (!window.confirm("Replace everything in this browser with the backup?")) return;
-        state = data;
-        if (!state.projects[state.current]) state.current = Object.keys(state.projects)[0];
+        state = d; if (!state.projects[state.current]) state.current = Object.keys(state.projects)[0];
         persist(); renderAll(); say("Backup restored.");
       } catch (err) { say("That file is not a valid backup."); }
     };
@@ -588,9 +936,8 @@
   });
   $("printBtn").addEventListener("click", function () { window.print(); });
   $("themeBtn").addEventListener("click", function () {
-    var root = document.documentElement, dark = root.getAttribute("data-theme") === "dark" ||
-      (!root.getAttribute("data-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
-    root.setAttribute("data-theme", dark ? "light" : "dark");
+    var r = document.documentElement, dark = r.getAttribute("data-theme") === "dark" || (!r.getAttribute("data-theme") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    r.setAttribute("data-theme", dark ? "light" : "dark");
   });
 
   renderAll();
